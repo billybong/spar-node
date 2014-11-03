@@ -1,0 +1,21 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://skatteverket.se/spar/instans/1.0" xmlns:ns1="http://skatteverket.se/spar/komponent/1.0">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ns:SPARPersonsokningFraga>
+         <ns1:IdentifieringsInformation>
+            <ns1:KundNrLeveransMottagare>{{config.kundNrLeveransMottagare}}</ns1:KundNrLeveransMottagare>
+            <ns1:KundNrSlutkund>{{config.kundNrSlutkund}}</ns1:KundNrSlutkund>
+            <ns1:OrgNrSlutkund>{{config.orgNrSlutkund}}</ns1:OrgNrSlutkund>
+            <ns1:SlutAnvandarId>{{config.slutAnvandarId}}</ns1:SlutAnvandarId>
+            <ns1:SlutAnvandarBehorighet>KAT_1</ns1:SlutAnvandarBehorighet>
+            <ns1:SlutAnvandarSekretessRatt>N</ns1:SlutAnvandarSekretessRatt>
+            <ns1:Tidsstampel>{{date}}</ns1:Tidsstampel>
+         </ns1:IdentifieringsInformation>
+         <ns1:PersonsokningFraga>
+            <ns1:PersonId>
+               <ns1:FysiskPersonId>{{ssn}}</ns1:FysiskPersonId>
+            </ns1:PersonId>
+         </ns1:PersonsokningFraga>
+      </ns:SPARPersonsokningFraga>
+   </soapenv:Body>
+</soapenv:Envelope>
