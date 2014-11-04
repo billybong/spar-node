@@ -1,4 +1,6 @@
 var config = {
+  sparUser : 'sparuser',
+  sparPassword : 'sparpassword',
   sparUrl : 'http://localhost:8088/sparservice',
   kundNrLeveransMottagare : '500243',
   kundNrSlutkund : '500243',
