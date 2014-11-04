@@ -1,5 +1,5 @@
 express = require 'express'
-config = require('./config.js').config
+config = require('./config').config
 sparclient = require './sparclient'
 basicAuth = require 'basic-auth'
 fs = require 'fs'
@@ -21,7 +21,6 @@ auth = (req, res, next) ->
     return unauthorized(res);
 
 app = express()
-
 app.use(auth)
 
 app.param('ssn', (req, res, next, id) ->
@@ -53,7 +52,6 @@ app.param('ssn', (req, res, next, id) ->
         console.log('Found person with id:' + id)
         res.send(JSON.stringify(person))
         next()
-
 
   sparclient.getPerson(id, (err, person) ->
     if err

@@ -1,4 +1,4 @@
-config = require('./config.js').config
+config = require('./config').config
 async = require 'async'
 request = require 'request'
 mustache = require 'mustache'
@@ -71,9 +71,8 @@ transformResponse = (xml, callback) ->
             callback(fault.faultstring?[0]?._ + ". " + faultDetails)
         else
             sparSvar = result.Envelope?.Body?[0]?.SPARPersonsokningSvar?[0]?.PersonsokningSvarsPost?[0]
-            allAddresses = sparSvar.Adress;
 
-            address = (address for address in allAddresses when address.DatumTom[0] == '9999-12-31')?[0]?.Folkbokforingsadress?[0]
+            address = (address for address in sparSvar.Adress when address.DatumTom[0] == '9999-12-31')?[0]?.Folkbokforingsadress?[0]
             personDetaljer = (details for details in sparSvar?.Persondetaljer when details.DatumTom[0] == '9999-12-31')?[0]
 
             person = {
