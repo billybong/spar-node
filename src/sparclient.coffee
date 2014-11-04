@@ -4,6 +4,7 @@ request = require 'request'
 mustache = require 'mustache'
 xml2js = require 'xml2js'
 stripPrefix = require('xml2js').processors.stripPrefix
+fs = require 'fs'
 
 soapRequest = '''
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://skatteverket.se/spar/instans/1.0" xmlns:ns1="http://skatteverket.se/spar/komponent/1.0">
@@ -29,6 +30,12 @@ soapRequest = '''
 </soapenv:Envelope>
 '''
 
+agentOptions = {
+        pfx: fs.readFileSync(config.clientCert),
+        passphrase: config.clientCertPassword,
+        securityOptions: 'SSL_OP_NO_SSLv3'
+}
+
 getPerson = (ssn, cb) ->
     model = {
         config: config,
@@ -41,7 +48,7 @@ getPerson = (ssn, cb) ->
           (callback) ->
             callback null, mustache.render(soapRequest, model)
         , (requestXml, callback) ->
-            request.post {url: config.sparUrl, body: requestXml}, (error, response, body) ->
+            request.post {url: config.sparUrl, agentOptions: agentOptions, body: requestXml}, (error, response, body) ->
                 if(error)
                     console.log(JSON.stringify(error))
                     callback(error.error)
@@ -58,6 +65,10 @@ transformResponse = (xml, callback) ->
     parser.parseString(xml, (err, result) ->
         if err
             callback("Error transforming response, error: #{err}\nPayload: #{xml}")
+        else if result.Envelope?.Body?[0]?.Fault
+            fault = result.Envelope?.Body?[0]?.Fault[0]
+            faultDetails = fault?.detail?[0]?.FelBeskrivning.map((it)->it._)?.join('. ')
+            callback(fault.faultstring?[0]?._ + ". " + faultDetails)
         else
             sparSvar = result.Envelope?.Body?[0]?.SPARPersonsokningSvar?[0]?.PersonsokningSvarsPost?[0]
             allAddresses = sparSvar.Adress;
