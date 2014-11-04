@@ -1,9 +1,11 @@
 express = require 'express'
 config = require('./config').config
-sparclient = require './sparclient'
+sparclient = require './sparclientmock'
 basicAuth = require 'basic-auth'
 fs = require 'fs'
-https = require 'https'
+https = require 'http'
+cluster = require 'cluster'
+os = require 'os'
 
 auth = (req, res, next) ->
   unauthorized = (res) ->
@@ -49,7 +51,6 @@ app.param('ssn', (req, res, next, id) ->
         res.status(404)
         next()
      else
-        console.log('Found person with id:' + id)
         res.send(JSON.stringify(person))
         next()
 
@@ -66,15 +67,20 @@ app.get('/person/:ssn', (req, res, next) ->
   next()
 )
 
-privateKey  = fs.readFileSync('sslcert/key.pem', 'utf8')
-certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
+privateKey  = fs.readFileSync('./sslcert/key.pem', 'utf8')
+certificate = fs.readFileSync('./sslcert/server.crt', 'utf8')
 
 credentials = {key: privateKey, cert: certificate}
 
-httpsServer = https.createServer(credentials, app)
-httpsServer.listen(443, () ->
-  host = httpsServer.address().address
-  port = httpsServer.address().port
+if cluster.isMaster
+  for i in [1..os.cpus().length]
+    cluster.fork()
+else
+  console.log('starting service')
+  httpsServer = https.createServer(app)
+  httpsServer.listen(443, () ->
+    host = httpsServer.address().address
+    port = httpsServer.address().port
 
-  console.log('SPAR app listening at http://%s:%s', host, port)
-)
+    console.log('SPAR app listening at http://%s:%s', host, port)
+  )
