@@ -1,6 +1,6 @@
 express = require 'express'
 config = require('./config').config
-sparclient = require './sparclientmock'
+sparclient = require './sparclient'
 basicAuth = require 'basic-auth'
 fs = require 'fs'
 https = require 'http'

@@ -12,4 +12,7 @@ exports.config = {
   #SSL
   clientCert: './sslcert/spar-client.p12',
   clientCertPassword: '123'
+
+  #Mock backend
+  mock: true
 };

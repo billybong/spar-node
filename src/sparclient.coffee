@@ -37,6 +37,10 @@ agentOptions = {
 }
 
 getPerson = (ssn, cb) ->
+    if config.mock
+        mock(ssn, cb)
+        return
+
     model = {
         config: config,
         ssn: ssn,
@@ -90,5 +94,17 @@ transformResponse = (xml, callback) ->
                 };
             callback(null, person)
     );
+
+mock = (ssn, cb) ->
+    cb null, {
+        firstName: 'Billy',
+        lastName: 'Bong',
+        id: ssn,
+        address: {
+            street: 'Kullasundsvänge 12',
+            city:   'Vaxholm',
+            zip:    '18537'
+            }
+    };
 
 module.exports.getPerson = getPerson;
