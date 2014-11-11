@@ -38,21 +38,19 @@ app.get('/person/:ssn', (req, res, next) ->
     if person == undefined
       res.status(404)
       console.log('Did not find person with id:' + id)
-      next()
     else if person.secret == true
       res.status(404)
       console.log('Person with id has secret identity:' + id)
-      next()
     else if person.deregistrationcode == 'G' && person.newSsn
       console.log('Person has a new ssn:' + id)
       res.redirect(301, '/person/' + person.newSsn)
     else if person.deregistrationcode
       console.log('Person is no longer registered at SPAR:' + id)
       res.status(404)
-      next()
     else
       res.send(JSON.stringify(person))
-      next()
+
+    next()
 
   sparclient.getPerson(req.param('ssn'), (err, person) ->
     if err
