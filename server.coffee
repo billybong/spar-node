@@ -26,6 +26,7 @@ app = express()
 app.use(auth)
 
 app.get('/person/:ssn', (req, res, next) ->
+  id = req.param('ssn')
   res.set('Content-Type', 'application/json')
 
   errorHandler = (error) ->
@@ -52,7 +53,7 @@ app.get('/person/:ssn', (req, res, next) ->
 
     next()
 
-  sparclient.getPerson(req.param('ssn'), (err, person) ->
+  sparclient.getPerson(id, (err, person) ->
     if err
       errorHandler(err)
     else
