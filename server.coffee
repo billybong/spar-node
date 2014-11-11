@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 express = require 'express'
 config = require('./config').config
 sparclient = require './sparclient'
@@ -25,7 +24,6 @@ auth = (req, res, next) ->
 
 app = express()
 app.use(auth)
-
 
 app.get('/person/:ssn', (req, res, next) ->
   res.set('Content-Type', 'application/json')
@@ -66,7 +64,6 @@ app.get('/person/:ssn', (req, res, next) ->
 
 privateKey  = fs.readFileSync('./sslcert/key.pem', 'utf8')
 certificate = fs.readFileSync('./sslcert/server.crt', 'utf8')
-
 credentials = {key: privateKey, cert: certificate}
 
 exports.start = () ->
