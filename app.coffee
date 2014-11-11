@@ -1,2 +1,1 @@
-app = require './server'
-app.start()
+require('./server').start()

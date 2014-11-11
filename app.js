@@ -1,3 +1,2 @@
-var coffee = require('coffee-script/register')
-var server = require('./server.coffee')
-server.start()
+require('coffee-script/register')
+require('./server.coffee').start()
